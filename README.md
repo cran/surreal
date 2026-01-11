@@ -8,17 +8,21 @@
 [![R-CMD-check](https://github.com/coatless-rpkg/surreal/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/coatless-rpkg/surreal/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-## Overview
-
-`surreal` implements the “Residual (Sur)Realism” algorithm described by
-Stefanski (2007). This package allows you to generate datasets that
-reveal hidden images or messages in their residual plots, providing a
-novel approach to understanding and illustrating statistical concepts.
+Ever wanted to hide secret messages or images in your data? That’s what
+the `surreal` package does! It lets you create datasets with hidden
+images or text that appear when you plot the residuals of a linear model
+by providing an implementation of the “Residual (Sur)Realism” algorithm
+described by Stefanski (2007).
 
 ## Installation
 
-You can install the development version of surreal from
-[GitHub](https://github.com/) with:
+You can install `surreal` from CRAN:
+
+``` r
+install.packages("surreal")
+```
+
+Or get the latest version from GitHub:
 
 ``` r
 # install.packages("remotes")
@@ -33,8 +37,8 @@ First, load the package:
 library(surreal)
 ```
 
-We can take an image with `x` and `y` coordinate positions for pixels
-and embed it into the residual plot.
+Once loaded, we can take any series of `(x, y)` coordinate positions for
+an image or a text message and apply the surreal method to it.
 
 ### Importing Data
 
@@ -46,9 +50,10 @@ data("r_logo_image_data", package = "surreal")
 plot(r_logo_image_data, pch = 16, main = "Original R Logo Data")
 ```
 
-<img src="man/figures/README-load-logo-1.png" width="100%" />
+<img src="man/figures/README-load-logo-1.png" alt="" width="100%" />
 
-The data is in a 2D format:
+The data for the R logo is stored in a data frame with two columns, `x`
+and `y`:
 
 ``` r
 str(r_logo_image_data)
@@ -67,25 +72,30 @@ summary(r_logo_image_data)
 
 ### Applying the Surreal Method
 
-Now, let’s apply the surreal method:
+Now, let’s apply the surreal method to the R logo data to hide it in a
+dataset. We’ll want to set a seed for reproducibility purposes since the
+algorithm relies on an optimization routine:
 
 ``` r
 set.seed(114)
 transformed_data <- surreal(r_logo_image_data)
 ```
 
-The transformation adds predictors that appear to have no underlying
-patterns:
+We can note that the transformed data has additional covariates that
+obfuscate the original image. If we observe the transformed data by
+using a scatterplot matrix graph, we can see that the new covariates do
+not reveal the original image:
 
 ``` r
 pairs(y ~ ., data = transformed_data, main = "Data After Transformation")
 ```
 
-<img src="man/figures/README-surreal-method-data-pair-plot-1.png" width="100%" />
+<img src="man/figures/README-surreal-method-data-pair-plot-1.png" alt="" width="100%" />
 
 ### Revealing the Hidden Image
 
-Fit a linear model to the transformed data and plot the residuals:
+We need to fit a linear model to the transformed data and plot the
+residuals:
 
 ``` r
 model <- lm(y ~ ., data = transformed_data)
@@ -93,23 +103,64 @@ plot(model$fitted, model$resid, pch = 16,
      main = "Residual Plot: Hidden R Logo Revealed")
 ```
 
-<img src="man/figures/README-surreal-method-residual-plot-1.png" width="100%" />
+<img src="man/figures/README-surreal-method-residual-plot-1.png" alt="" width="100%" />
 
-The residual plot reveals the original R logo with a slight border,
-enhancing the image recovery.
+The residual plot reveals the original R logo with a slight border. This
+border is automatically added inside the surreal method to enhance the
+recovery of the hidden image in the residual plot.
 
-## Creating Custom Hidden Images
+## Hide Your Own Message
 
-You can also create datasets with custom hidden images or text. Here’s a
-quick example using text:
+Want to hide your own message? You can also create datasets with custom
+text:
 
 ``` r
-text_data <- surreal_text("R\nis\nawesome!")
-model <- lm(y ~ ., data = text_data)
-plot(model$fitted, model$resid, pch = 16, main = "Custom Text in Residuals")
+# Generate a dataset with a hidden message across multiple lines
+message_data <- surreal_text("R\nis\nawesome!")
+
+# Reveal the hidden message
+model <- lm(y ~ ., data = message_data)
+plot(model$fitted, model$resid, pch = 16, 
+     main = "Custom Message in Residuals")
 ```
 
-<img src="man/figures/README-custom-text-example-1.png" width="100%" />
+<img src="man/figures/README-custom-text-example-1.png" alt="" width="100%" />
+
+## Use Any Image
+
+You can create surreal datasets directly from image files or URLs using
+`surreal_image()`:
+
+``` r
+# From a local file
+result <- surreal_image("path/to/image.png")
+
+# From a URL
+result <- surreal_image("https://www.r-project.org/logo/Rlogo.png")
+
+# Reveal the hidden image
+model <- lm(y ~ ., data = result)
+plot(model$fitted, model$resid, pch = 16)
+```
+
+The function supports PNG, JPEG, BMP, TIFF, and SVG formats, with
+automatic mode detection (dark/light) and threshold calculation.
+
+## Interactive App
+
+For a point-and-click experience, launch the interactive Shiny app:
+
+``` r
+surreal_app()
+```
+
+The app lets you:
+
+- Try demo datasets (Jack-o-Lantern, R Logo)
+- Enter custom text messages
+- Upload your own images
+- Adjust parameters and see results in real-time
+- Export data to CSV or download plots
 
 ## References
 
@@ -118,10 +169,10 @@ Statistician*, 61(2), 163-177. <doi:10.1198/000313007X190079>
 
 ## Acknowledgements
 
-This package builds upon the work of [John
+This package is based on Stefanski (2007) and builds upon earlier R
+implementations by [John
 Staudenmayer](https://www4.stat.ncsu.edu/~stefansk/NSF_Supported/Hidden_Images/000_R_Programs/John_Staudenmayer/),
 [Peter
 Wolf](https://www4.stat.ncsu.edu/~stefansk/NSF_Supported/Hidden_Images/000_R_Programs/Peter_Wolf/),
 and [Ulrike
-Gromping](https://www4.stat.ncsu.edu/~stefansk/NSF_Supported/Hidden_Images/000_R_Programs/Ulrike_Gromping/),
-who initially brought these algorithms to R.
+Gromping](https://www4.stat.ncsu.edu/~stefansk/NSF_Supported/Hidden_Images/000_R_Programs/Ulrike_Gromping/).

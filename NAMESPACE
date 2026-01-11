@@ -2,6 +2,8 @@
 
 export(border_augmentation)
 export(surreal)
+export(surreal_app)
+export(surreal_image)
 export(surreal_text)
 importFrom(grDevices,dev.off)
 importFrom(grDevices,png)

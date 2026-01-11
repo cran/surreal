@@ -1,3 +1,15 @@
+# surreal 0.0.2
+
+## New Features
+
+- `surreal_image()`: Create surreal datasets directly from image files or URLs.
+  Supports PNG, JPEG, BMP, TIFF, and SVG formats with automatic mode detection
+  and threshold calculation.
+
+- `surreal_app()`: Launch an interactive Shiny application for exploring the
+  surreal algorithm. Includes demo datasets, custom text input, image uploads,
+  and real-time parameter controls. Export results to CSV or download plots.
+
 # surreal 0.0.1
 
 ## Features
@@ -6,8 +18,6 @@
   into a data set that seemingly has no pattern until the residuals are plotted.
 - `surreal_text()`: embeds a hidden text pattern into a data set that seemingly
   has no pattern until the residuals are plotted.
-  - This function works only on Unix-like systems due to the `ppm` file type
-    not being supported by the version of GhostScript included with R on Windows.
 - Included data:
   - `r_logo_image_data`: a data set containing the R logo image that can be
     hidden using the `surreal()` function.
