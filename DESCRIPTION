@@ -1,6 +1,6 @@
 Package: surreal
 Title: Create Datasets with Hidden Images in Residual Plots
-Version: 0.0.2
+Version: 0.0.3
 Authors@R: c(
     person("James Joseph", "Balamuta", email = "james.balamuta@gmail.com", 
            role = c("aut", "cre", "cph"), 
@@ -21,11 +21,13 @@ URL: https://github.com/coatless-rpkg/surreal,
 BugReports: https://github.com/coatless-rpkg/surreal/issues
 LazyData: true
 Imports: cli, png
-Suggests: bmp, bslib, jpeg, rsvg, shiny, tiff
+Suggests: bmp, bslib, jpeg, rsvg, shiny, testthat (>= 3.0.0), tiff,
+        withr
+Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2026-01-11 06:29:24 UTC; ronin
+Packaged: 2026-10-09 16:06:11 UTC; ronin
 Author: James Joseph Balamuta [aut, cre, cph] (ORCID:
     <https://orcid.org/0000-0003-2826-8458>)
 Maintainer: James Joseph Balamuta <james.balamuta@gmail.com>
 Repository: CRAN
-Date/Publication: 2026-01-11 06:40:02 UTC
+Date/Publication: 2026-10-09 16:50:02 UTC
